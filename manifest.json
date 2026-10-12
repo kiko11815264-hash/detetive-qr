@@ -1,0 +1,10 @@
+{
+  "name": "Detetive QR",
+  "short_name": "Detetive QR",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f3eb",
+  "theme_color": "#292725",
+  "description": "Protótipo presencial do jogo Detetive QR",
+  "icons": []
+}

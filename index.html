@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#292725">
+  <meta name="description" content="Protótipo do jogo presencial Detetive QR">
+  <link rel="manifest" href="manifest.json">
+  <title>Detetive QR</title>
+  <style>
+    :root{--ink:#292725;--paper:#f7f3eb;--wine:#6f263d;--line:#d8d0c4;--muted:#6b655d;--green:#385b48}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+    header{background:var(--ink);color:#fff;padding:22px 16px;text-align:center} header h1{margin:0;font-size:1.65rem;letter-spacing:.04em} header p{margin:5px 0 0;color:#e5ddd1}
+    main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}
+    section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 2px 8px #00000008}
+    h2{font-size:1.1rem;margin:0 0 10px} p{margin:8px 0}.muted{color:var(--muted);font-size:.92rem}
+    label{display:block;font-weight:650;margin:10px 0 5px} input,select,button,textarea{font:inherit}
+    input,select,textarea{width:100%;padding:11px;border:1px solid #bdb4a7;border-radius:9px;background:#fff;color:var(--ink)}
+    button{border:0;border-radius:10px;padding:11px 14px;background:var(--wine);color:#fff;font-weight:700;cursor:pointer}
+    button.secondary{background:#eee7dc;color:var(--ink);border:1px solid var(--line)} button:disabled{opacity:.45;cursor:not-allowed}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.hidden{display:none!important}.notice{padding:10px 12px;border-radius:10px;background:#f2ecdf;border:1px solid var(--line);white-space:pre-wrap}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.pill{display:inline-block;background:#eee7dc;padding:3px 8px;border-radius:99px;font-size:.8rem}
+    #reader{width:100%;max-width:420px;margin:12px auto} .list{padding-left:20px}.list li{margin:5px 0} footer{text-align:center;color:var(--muted);padding:8px 16px 28px;font-size:.85rem}
+  </style>
+</head>
+<body>
+<header><h1>DETETIVE QR</h1><p>Um mistério. Muitas pistas. Uma única solução.</p></header>
+<main>
+  <section id="welcome">
+    <h2>Começar uma partida</h2>
+    <p class="muted">Protótipo local para testar as regras. Nesta versão, os dados ficam neste navegador; ainda não há sincronização entre celulares.</p>
+    <label for="playerName">Seu nome</label><input id="playerName" maxlength="24" placeholder="Ex.: Marina">
+    <label for="playerCount">Quantidade de jogadores</label>
+    <select id="playerCount"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+    <label for="names">Nomes dos jogadores (um por linha)</label>
+    <textarea id="names" rows="4" placeholder="Marina&#10;Rafael&#10;João&#10;Ana"></textarea>
+    <div class="actions"><button id="createBtn">Criar partida de teste</button><button class="secondary" id="demoBtn">Preencher exemplo</button></div>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="grid">
+      <div><span class="pill">SALA LOCAL</span><h2 id="gameTitle">Partida</h2><p class="muted" id="turnText"></p></div>
+      <div><span class="pill">CARTAS NA MÃO</span><h2 id="handCount">0</h2><p class="muted">Cartas privadas deste navegador</p></div>
+    </div>
+    <div class="notice" id="status">Partida criada.</div>
+    <h2 style="margin-top:16px">Sua mão</h2>
+    <ul id="handList" class="list"></ul>
+    <div class="actions"><button id="scanBtn">Escanear QR de pista</button><button class="secondary" id="nextBtn">Passar turno</button><button class="secondary" id="restartBtn">Reiniciar teste</button></div>
+    <div id="scannerPanel" class="hidden">
+      <p class="muted">Aponte a câmera para o QR Code de uma carta de pista (P01 a P12). A câmera normalmente exige HTTPS ou localhost.</p>
+      <div id="reader"></div><div class="actions"><button class="secondary" id="stopScanBtn">Parar câmera</button></div>
+    </div>
+    <div id="cluePanel" class="hidden"><h2>Pista revelada</h2><div class="notice" id="clueText"></div></div>
+    <h2 style="margin-top:18px">Registrar hipótese</h2>
+    <div class="grid">
+      <div><label for="suspect">Suspeito</label><select id="suspect"></select></div>
+      <div><label for="object">Objeto</label><select id="object"></select></div>
+      <div><label for="location">Local</label><select id="location"></select></div>
+    </div>
+    <div class="actions"><button id="hypothesisBtn">Registrar hipótese</button><button class="secondary" id="accuseBtn">Fazer acusação final</button></div>
+    <div id="result" class="notice hidden"></div>
+    <h2 style="margin-top:18px">Histórico público</h2><ul id="history" class="list"></ul>
+    <p class="muted">Aviso: esta versão de teste não protege segredos contra alguém que inspecione o navegador e não deve ser usada como sistema competitivo.</p>
+  </section>
+  <section>
+    <h2>Como ler os QR Codes</h2>
+    <p>Os códigos impressos seguem o formato <code>DQR|v1|P01</code>. O aplicativo usa o identificador para encontrar a carta. Nesta versão, as pistas são exemplos demonstrativos.</p>
+    <p class="muted">Para multiplayer real, será necessário configurar o backend e transferir a solução secreta para o servidor. Veja o arquivo README incluído no pacote.</p>
+  </section>
+</main>
+<footer>Detetive QR • Protótipo 1.0 • Projeto experimental</footer>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
