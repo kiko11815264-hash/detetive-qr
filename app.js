@@ -97,3 +97,20 @@ $("accuseBtn").onclick=()=>{
  render();
 };
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+
+async function entrarComoJogador() {
+  const { data, error } =
+    await supabaseClient.auth.signInAnonymously();
+
+  if (error) {
+    console.error("Erro no login:", error.message);
+    return null;
+  }
+
+  console.log("Jogador autenticado com sucesso.");
+  console.log("ID do jogador:", data.user.id);
+
+  return data.user;
+}
+
+window.entrarComoJogador = entrarComoJogador;
