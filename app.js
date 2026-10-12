@@ -1,3 +1,11 @@
+
+const SUPABASE_URL = "https://wyesyofdpybhorhnbzcq.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_mi5SoiP-_AUMN6KdH9lcYA_S-wrcvUa";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 const suspects=[
  {id:"S01",name:"Augusto Vale"},{id:"S02",name:"Helena Duarte"},{id:"S03",name:"Dr. Otávio Nunes"},
  {id:"S04",name:"Clara Monteiro"},{id:"S05",name:"Bento Farias"},{id:"S06",name:"Miguel Sampaio"}];
